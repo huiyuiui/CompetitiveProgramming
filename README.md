@@ -1,3 +1,10 @@
 # CompetitiveProgramming
 
-### [MeowMeowOJ](http://adalab.cs.nthu.edu.tw)
+**NTHU 11210CS 343300 Competitive Programming Training (I)**
+
+### OnlineJudge
+- [MeowMeowOJ](http://adalab.cs.nthu.edu.tw)
+
+### Course
+- [week1-Recursive](./week1/)
+- [week2-BackTracking](./week2/)
