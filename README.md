@@ -8,3 +8,4 @@
 ### Course
 - [week1-Recursive](./week1/)
 - [week2-BackTracking](./week2/)
+- [week3-DataStructureAndSTL](./week3)
