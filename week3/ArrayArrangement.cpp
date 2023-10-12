@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// TODO: Fix the WA bug
 __int32_t main(){
     int T;
     cin >> T;
@@ -47,10 +48,9 @@ __int32_t main(){
         }
         // print 移動到tail的
         for (auto it = tail.begin(); it != tail.end(); it++)
-        {
-            if(it == tail.end() - 1) cout << *it << endl;
-            else cout << *it << ' ';
-        }
+            cout << *it << ' ';
+        cout << endl;   // 換行要在最後，不能放在tail的迴圈，如果tail為空則不會print換行，就會WA
+        // 目前大部分OJ都不會抓多一個空格，但仍要注意
     }
     
 
