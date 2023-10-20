@@ -10,3 +10,4 @@
 - [week2-BackTracking](./week2/)
 - [week3-DataStructureAndSTL](./week3)
 - [week4-BinarySearch](./week4/)
+- [week5-BasicDataStructureApplication](./week5/)
