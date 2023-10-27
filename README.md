@@ -11,3 +11,4 @@
 - [week3-DataStructureAndSTL](./week3)
 - [week4-BinarySearch](./week4/)
 - [week5-BasicDataStructureApplication](./week5/)
+- [week6-Breadth-first search](./week6/)
