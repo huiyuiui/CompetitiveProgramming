@@ -1,106 +1,104 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #define int long long
 #define MX 9223372036854775807
 #define oo 1e18
 
 using namespace std;
-
-struct Node{
-    int id;
-    Node* next;
+struct que
+{
+    int val, head, tail;
+    que *pre, *nxt;
 };
 
-struct Head{
-    Node* next;
-};
+que q[1000005];
+int head[1000005], tail[1000005];
 
-int inQueue[1000005];
-
-__int32_t main(){
-    int N, M;
-    vector<Head*> queueList;
-    Head* empty = new Head;
-    queueList.push_back(empty);
-    cin >> N >> M;
-    for (int i = 1; i <= N; i++)
-    {
-        Head* head = new Head;
-        Node* node = new Node;
-        node->id = i;
-        node->next = NULL;
-        head->next = node;
-        queueList.push_back(head);
-        inQueue[i] = i;
+int32_t main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    int n, m;
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++){
+        tail[i] = head[i] = q[i].val = q[i].head = q[i].tail = i;
+        q[i].nxt = q[i].pre = nullptr;
     }
-    for (int i = 0; i < M; i++)
+    for (int i = 0; i < m; i++)
     {
-        int query, a, b;
-        cin >> query  >> a >> b;
-        if(query == 0){
-            int fromQueue = inQueue[a];
-            int toQueue = inQueue[b];
-            Node* fromNow = queueList[fromQueue]->next;
-            Node* toNow = queueList[toQueue]->next;
-            Node* from;
-            int flag = 1;
-            if(fromNow->id == a){ // 如果第一個即為要移動的
-                from = fromNow;
-                queueList[fromQueue]->next = from->next;
-                flag = 0;
-            }
-            if(flag){ // 如果不在第一個則遍歷
-                while (fromNow != NULL) // 遍歷找到
-                {
-                    if(fromNow->next->id == a){ // 用next判斷，因為要更改next
-                        from = fromNow->next;
-                        fromNow->next = from->next; // 目前的next接到下下個
-                        break;
-                    }
-                    else fromNow = fromNow->next;
-                }
-            }
-            while (toNow != NULL)
+        int typ, a, b;
+        cin >> typ >> a >> b;
+        if (typ == 0)
+        {
+            if (q[b].nxt == q + a) continue;
+            if (q[a].head !=-1)
             {
-                if(toNow->id == b){
-                    from->next = toNow->next;
-                    toNow->next = from;
-                    break;
+                if (q[a].nxt != nullptr){
+                    head[q[a].head] = q[a].nxt->val;
+                    q[a].nxt->head = q[a].head;
                 }
-                else toNow = toNow->next;
+                else head[q[a].head] = 0;
+                q[a].head =- 1;
             }
-            inQueue[a] = inQueue[b]; // 記得更新a在哪個queue
-        }
-        else if(query == 1){
-            Node* from = queueList[a]->next;
-            Node* to = queueList[b]->next;
-            Node* now = from;
-            queueList[a]->next = NULL;
-            while (now != NULL)
+            if (q[a].tail !=-1)
             {
-                inQueue[now->id] = b;
-                now = now->next;
+                if (q[a].pre != nullptr){
+                    tail[q[a].tail] = q[a].pre->val;
+                    q[a].pre->tail = q[a].tail;
+                }
+                else tail[q[a].tail] = 0;
+                q[a].tail =-1;
             }
-            if(to == NULL) queueList[b]->next = from;
-            else{
-                while (to->next != NULL)
-                    to = to->next;
-                to->next = from;
+            if (q[b].tail !=-1)
+            {
+                tail[q[b].tail] = a;
+                q[a].tail = q[b].tail;
+                q[b].tail =-1;
             }
+            if (q[a].pre) q[a].pre->nxt = q[a].nxt;
+            if (q[a].nxt) q[a].nxt->pre = q[a].pre;
+            q[a].pre = q + b, q[a].nxt = q[b].nxt;
+            if (q[b].nxt) q[b].nxt->pre = q + a;
+            q[b].nxt = q + a;
+        }
+        else
+        {
+            if (head[a] == 0)
+                continue;
+            int tmp = tail[b], tmp2 = head[a];
+            que *start = q + tmp, *start2 = q + tmp2;
+            tmp = tail[a];
+            que *start3 = q + tmp;
+            start3->tail = b;
+            if (head[b] == 0)
+            {
+                head[b] = head[a];
+                tail[b] = tail[a];
+                start2->head = b;
+                head[a] = tail[a] = 0;
+                continue;
+            }
+            start->nxt = start2;
+            start2->pre = start;
+            head[a] = 0;
+            tail[b] = tail[a];
+            tail[a] = 0;
+            start2->head =-1;
+            start->tail =-1;
         }
     }
-    
-    for (int i = 1; i <= N; i++)
+    for (int i = 1; i <= n; i++)
     {
-        cout << '#' << i << ':';
-        Node* now = queueList[i]->next;
-        while (now != NULL){
-            cout << ' ' << now->id;
-            now = now->next;
+        int tmp = head[i];
+        que start = q[tmp];
+        cout << "#" << i << ":";
+        while (start.val != 0)
+        {
+            cout << " " << start.val;
+            if (start.nxt)
+                start = *(start.nxt);
+            else
+                break;
         }
-        cout << endl;
+        cout << '\n';
     }
-    
-
-    return 0;
 }
-

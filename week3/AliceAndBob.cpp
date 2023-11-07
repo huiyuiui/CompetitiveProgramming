@@ -2,7 +2,10 @@
 #define int long long
 #define MX 9223372036854775807
 #define oo 1e18
-
+#define P pair<int, int>
+#define PP pair<P, P>
+#define F first
+#define S second
 using namespace std;
 
 int K, N, M;
@@ -41,90 +44,95 @@ __int32_t main(){
         prevTime = time; 
     }
 
-    flag = 1;
+    flag = 0;
     int purpleCount = 0;
     int prevAliceRow, prevAliceCol, prevBobRow, prevBobCol;
-    int nowAliceRow, nowAliceCol, nowBobRow, nowBobCol;
+    int nowAliceRow = 0, nowAliceCol = 0, nowBobRow = 0, nowBobCol = 0;
     prevAliceRow = prevAliceCol = prevBobRow = prevBobCol = 0;
-    while (bob.size())
-    {
-        nowAliceRow = alice.front().first;
-        nowAliceCol = alice.front().second;
-        nowBobRow = bob.front().first;
-        nowBobCol = bob.front().second;
+    // nowAliceRow = alice.front().first;
+    // nowAliceCol = alice.front().second;
+    // nowBobRow = bob.front().first;
+    // nowBobCol = bob.front().second;
+    // alice.pop();
+    // bob.pop();
+    while (bob.size() || alice.size())
+    {       
+        if((alice.size() && (nowAliceRow < nowBobRow || nowAliceCol < nowBobCol)) || !bob.size()){
+            prevAliceRow = nowAliceRow;
+            prevAliceCol = nowAliceCol;
+            nowAliceRow = alice.front().first;
+            nowAliceCol = alice.front().second;
+            alice.pop();
+        }
+        else{
+            prevBobRow = nowBobRow;
+            prevBobCol = nowBobCol;
+            nowBobRow = bob.front().first;
+            nowBobCol = bob.front().second;
+            bob.pop();
+            flag = !flag;
+        }    
         // right cross
         if(flag == 0){
-            if(prevAliceRow <= nowBobRow && nowBobRow <= nowAliceRow && prevBobCol <= nowAliceCol && nowAliceCol <= nowBobCol){
-                int start = max(prevAliceCol, prevBobCol);
-                if(prevBobRow == prevAliceRow) start++;
+            if(prevAliceRow == nowBobRow && nowBobRow == nowAliceRow){
+                int start = max(prevAliceCol, prevBobCol) + 1;
                 int end = min(nowAliceCol, nowBobCol);
-                // for (int i = start; i <= end; i++)
-                // {
-                //     cout << nowBobRow << ' ' << i << endl;
-                // }
-                purpleCount += (end - start) + 1;
-            }
-            while(nowBobCol > nowAliceCol && alice.size()){
-                prevAliceRow = nowAliceRow;
-                prevAliceCol = nowAliceCol;
-                alice.pop();
-                if(alice.size()){
-                    nowAliceRow = alice.front().first;
-                    nowAliceCol = alice.front().second;
+                if(end - start >= 0){
+                    // for (int i = start; i <= end; i++)
+                    // {
+                    //     cout << nowBobRow << ' ' << i << endl;
+                    // }
+                    purpleCount += (end - start) + 1;
                 }
+            }
+            else if(prevAliceRow < nowBobRow && nowBobRow <= nowAliceRow && prevBobCol < nowAliceCol && nowAliceCol <= nowBobCol){
+                // cout << nowBobRow << ' ' << nowAliceCol << endl;
+                purpleCount++;
             }
         }
         // down cross
         else if(flag == 1){
-            if(prevAliceCol <= nowBobCol && nowBobCol <= nowAliceCol && prevBobRow <= nowAliceRow && nowAliceRow <= nowBobRow){
-                int start = max(prevAliceRow, prevBobRow);
-                if(prevBobCol == prevAliceCol) start++;
+            if(prevAliceCol == nowBobCol && nowBobCol == nowAliceCol){
+                int start = max(prevAliceRow, prevBobRow) + 1;
                 int end = min(nowAliceRow, nowBobRow);
-                // for (int i = start; i <= end; i++)
-                // {
-                //     cout << i << ' ' << nowBobCol << endl;
-                // }
-                purpleCount += (end - start) + 1;
-            }
-            while(nowBobRow > nowAliceRow && alice.size()){
-                prevAliceRow = nowAliceRow;
-                prevAliceCol = nowAliceCol;
-                alice.pop();
-                if(alice.size()){
-                    nowAliceRow = alice.front().first;
-                    nowAliceCol = alice.front().second;
+                if(end - start >= 0){
+                    // for (int i = start; i <= end; i++)
+                    // {
+                    //     cout << i << ' ' << nowBobCol << endl;
+                    // }
+                    purpleCount += (end - start) + 1;
                 }
             }
-        }
-        prevBobRow = nowBobRow;
-        prevBobCol = nowBobCol;
-        bob.pop();
-        flag = !flag;
-    }
-    if(alice.size()){
-        if(flag == 0){ // prev is down
-            if(nowAliceCol == nowBobCol){
-                int start = prevBobRow + 1;
-                int end = min(nowAliceRow, nowBobRow);
-                // for (int i = start; i <= end; i++)
-                // {
-                //     cout << i << ' ' << nowBobCol << endl;
-                // }
-                purpleCount += (end - start) + 1;
+            else if(prevAliceCol < nowBobCol && nowBobCol <= nowAliceCol && prevBobRow < nowAliceRow && nowAliceRow <= nowBobRow){
+                // cout << nowAliceRow << ' ' << nowBobCol << endl;
+                purpleCount++;
             }
         }
-        else if(flag == 1){ // prev is right
-            if(nowAliceRow == nowBobRow){
-                int start = prevAliceCol + 1;
-                int end = min(nowAliceCol, nowBobCol);
-                // for (int i = start; i <= end; i++)
-                // {
-                //     cout << nowBobRow << ' ' << i << endl;
-                // }
-                purpleCount += (end - start) + 1;
-            }
-        } 
     }
+    // if(alice.size()){
+    //     if(flag == 0){ // prev is down
+    //         if(nowAliceCol == nowBobCol){
+    //             int start = prevBobRow + 1;
+    //             int end = min(nowAliceRow, nowBobRow);
+    //             for (int i = start; i <= end; i++)
+    //             {
+    //                 cout << i << ' ' << nowBobCol << endl;
+    //             }
+    //             purpleCount += (end - start) + 1;
+    //         }
+    //     }
+    //     else if(flag == 1){ // prev is right
+    //         if(nowAliceRow == nowBobRow){
+    //             int start = prevAliceCol + 1;
+    //             int end = min(nowAliceCol, nowBobCol);
+    //             for (int i = start; i <= end; i++)
+    //             {
+    //                 cout << nowBobRow << ' ' << i << endl;
+    //             }
+    //             purpleCount += (end - start) + 1;
+    //         }
+    //     } 
+    // }
     cout << K - purpleCount << ' ' << K - purpleCount << ' ' << purpleCount << endl;
     
     return 0;
